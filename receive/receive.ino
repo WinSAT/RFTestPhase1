@@ -24,6 +24,7 @@ void setup(){
   digitalWrite(isReceivePin, LOW);
 
   Serial.begin(9600);     //decalre max data rate between board/computer
+  Serial.println("start");
 
   if(!receiverBoard.init()){     //.init() returns boolean from intialization
     Serial.println("Intialization Error");  //prints to serial terminal
@@ -37,19 +38,21 @@ void setup(){
 }
 
 void loop(){
-
   digitalWrite(isReceivePin, HIGH);
-  uint8_t buffer[8];    //declare a 8 byte buffer to store incoming
+  uint8_t buffer[10];    //declare a 8 byte buffer to store incoming
   uint8_t bufferLength= sizeof(buffer);  //determine how many bytes are free in buffer
 
   if (receiverBoard.recv(buffer, &bufferLength)){  //recv function takes buffer and pointer to length
+    Serial.println("=====================================");
     Serial.println("Message Received: ");     //returns a boolean if received good
     Serial.println((char*)buffer);          //if msg avail, copy to buf
-  }else{                        //if good copy, put len in buflen
+    //digitalWrite(isReceivePin, HIGH);
+    //digitalWrite(errPin, HIGH);
+  }
+  /*else{                        //if good copy, put len in buflen
+    Serial.println("error");
     digitalWrite(isReceivePin, LOW);
     delay(2000);
     digitalWrite(errPin, HIGH);
-  }
-
-  Serial.println("=====================================");
+  }*/
 }

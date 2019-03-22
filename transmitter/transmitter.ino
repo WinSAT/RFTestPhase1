@@ -8,12 +8,14 @@
 
 #include <RH_ASK.h>    //our module uses ASK modulation so we must include this package
 #include <SPI.h>    //needed for compiling
+#include <TFT.h>
+
 #define successPin 5  //define our display led pins
 #define errPin 6
 #define isTransPin 7
 
 RH_ASK transmitterBoard;          //create a radiohead ASK object
-
+int count = 0;
 void setup(){
 
   pinMode(successPin, OUTPUT);
@@ -41,9 +43,10 @@ void setup(){
 }
 
 void loop(){
-  
+  count++;
   digitalWrite(isTransPin, HIGH);
-  const char *test = "12345679";   
+  String tst = "Hello" + String(count);
+  const char *test = tst.c_str();   
   transmitterBoard.send((uint8_t *)test, strlen(test));   //(what to send, number of packets)
   transmitterBoard.waitPacketSent();            //wait for packets to be sent
   if(transmitterBoard.txGood() < 1){
