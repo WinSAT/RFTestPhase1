@@ -9,6 +9,7 @@
 #include <RH_ASK.h>    //our module uses ASK modulation so we must include this package
 #include <SPI.h>    //needed for compiling
 #include <TFT.h>
+#include <stdio.h>
 
 #define successPin 5  //define our display led pins
 #define errPin 6

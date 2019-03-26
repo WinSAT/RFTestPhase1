@@ -39,7 +39,7 @@ void setup(){
 
 void loop(){
   digitalWrite(isReceivePin, HIGH);
-  uint8_t buffer[60];    //declare a 8 byte buffer to store incoming
+  uint8_t buffer[255];    //declare a 8 byte buffer to store incoming
   uint8_t bufferLength= sizeof(buffer);  //determine how many bytes are free in buffer
 
   if (receiverBoard.recv(buffer, &bufferLength)){  //recv function takes buffer and pointer to length
