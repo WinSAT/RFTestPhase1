@@ -14,8 +14,10 @@
 #define errPin 6
 #define isTransPin 7
 
-RH_ASK transmitterBoard;          //create a radiohead ASK object
-int count = 0;
+//RH_ASK transmitterBoard(2000,2,3,4,false);          //create a radiohead ASK object
+RH_ASK transmitterBoard;
+String output = "";
+String dOutput = "";
 void setup(){
 
   pinMode(successPin, OUTPUT);
@@ -30,7 +32,6 @@ void setup(){
   digitalWrite(isTransPin, LOW);
 
   Serial.begin(9600);     //decalre max data rate between board/computer
-
   if(!transmitterBoard.init()){     //.init() returns boolean from intialization
     Serial.println("Intialization Error");  //prints to serial terminal
     digitalWrite(errPin, HIGH);       //show error on red led
@@ -43,16 +44,19 @@ void setup(){
 }
 
 void loop(){
-  count++;
-  digitalWrite(isTransPin, HIGH);
-  String tst = "Hello" + String(count);
-  const char *test = tst.c_str();   
-  transmitterBoard.send((uint8_t *)test, strlen(test));   //(what to send, number of packets)
-  transmitterBoard.waitPacketSent();            //wait for packets to be sent
-  if(transmitterBoard.txGood() < 1){
-    digitalWrite(errPin, HIGH);     //sending no packets shows error light
-    digitalWrite(isTransPin, LOW);
-    delay(20000);
+  digitalWrite(isTransPin, LOW);
+  String output = Serial.readString();
+  //Serial.println(output);
+  if(output != "" && output != dOutput){
+    dOutput = output;
+    const char *dataTrans = output.c_str();   
+    transmitterBoard.send((uint8_t *)dataTrans, strlen(dataTrans));   //(what to send, number of packets)
+    transmitterBoard.waitPacketSent();            //wait for packets to be sent
+    digitalWrite(isTransPin, HIGH);
+    if(transmitterBoard.txGood() < 1){
+      digitalWrite(errPin, HIGH);     //sending no packets shows error light
+      digitalWrite(isTransPin, LOW);
+      delay(5000);
+    }
   }
-  delay(1000); //delay and repeat 
 }
